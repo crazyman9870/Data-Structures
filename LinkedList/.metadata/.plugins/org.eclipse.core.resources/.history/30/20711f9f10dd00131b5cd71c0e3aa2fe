@@ -1,0 +1,205 @@
+/*
+ * LinkedList.h
+ *
+ *  Created on: May 15, 2014
+ *      Author: aconstan
+ */
+
+#ifndef LINKEDLIST_H_
+#define LINKEDLIST_H_
+#include "Factory.h"
+#include "LinkedListInterface.h"
+
+using namespace std;
+
+template <class T>
+
+class LinkedList : public LinkedListInterface <T>
+{
+private:
+	struct Node
+	{
+
+		T data;
+		Node* next;
+
+
+		Node (T data_item, Node* next_ptr) :
+			data (data_item), next (next_ptr) {}
+	};
+
+
+	Node* head;
+
+
+
+public:
+	LinkedList<T>()
+	{
+		head = NULL;
+
+	}
+	~LinkedList()
+	{
+		clear();
+	}
+
+	//=========================================================================================
+
+	void insertHead(T value)
+	{
+
+		Node* cur = head;
+
+		if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+		while (cur != NULL)
+		{
+			if (cur->data == value)
+				return;
+			cur = cur->next;
+		}
+
+		Node* n = new Node (value, head);
+		head = n;
+
+	}
+
+	void insertTail(T value)
+	{
+        Node* cur = head;
+
+        if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+
+		while (cur != NULL)
+		{
+			if (cur->data == value)
+				return;
+
+            if (cur->next == NULL)
+            {
+                Node* n = new Node (value, NULL);
+                cur = n;
+                return;
+            }
+
+			cur = cur->next;
+		}
+
+	}
+
+	void insertAfter(T value, T insertionNode)
+	{
+        Node* cur = head;
+        Node* inser = head;
+
+        if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+
+        while (cur->next != NULL)
+		{
+			if (cur->data == value)
+				return;
+			cur = cur->next;
+		}
+
+		if (inser->data == insertionNode)
+        {
+            Node* n = new Node (value, inser->next);
+            inser = n;
+            return;
+        }
+
+		while (inser->next->data != insertionNode)
+        {
+            inser = inser->next;
+        }
+        inser = new Node (value, inser->next);
+
+	}
+
+	void remove(T value)
+	{
+	    Node* cur = head;
+	    Node* del = head;
+
+	    if (cur == NULL)
+        {
+            return;
+        }
+
+	    while (cur->next->data != value && cur->next != NULL)
+        {
+            cur = cur->next;
+            del = del->next;
+        }
+
+        del = del->next;
+        delete del;
+
+        cur = cur->next->next;
+	}
+
+	void clear()
+	{
+		while (head != NULL)
+			remove(head->data);
+	}
+
+	T at(int index)
+	{
+		Node* cur = head;
+
+
+		if (cur == NULL)
+            return NULL;
+		if (index < 0)
+			return NULL;
+
+
+        //while (cur->next != NULL)
+		for (int i = 0; i < index; i++)
+        {
+			if (cur == NULL)
+				return NULL;
+			cur = cur->next;
+        }
+		return cur->data;
+	}
+
+	int size()
+	{
+		int number = 0;
+		Node* cur = head;
+
+		if (cur == NULL)
+			return 0;
+
+        while (cur != NULL)
+        {
+            cur = cur->next;
+            number++;
+        }
+        //number++;
+
+		return number;
+	}
+
+};
+
+
+
+#endif /* LINKEDLIST_H_ */

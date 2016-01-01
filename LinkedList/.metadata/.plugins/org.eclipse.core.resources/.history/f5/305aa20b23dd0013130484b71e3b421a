@@ -1,0 +1,232 @@
+/*
+ * LinkedList.h
+ *
+ *  Created on: May 15, 2014
+ *      Author: aconstan
+ */
+
+#ifndef LINKEDLIST_H_
+#define LINKEDLIST_H_
+#include "Factory.h"
+#include "LinkedListInterface.h"
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+
+class LinkedList : public LinkedListInterface <T>
+{
+private:
+	struct Node
+	{
+
+		T data;
+		Node* next;
+
+
+		Node (T data_item, Node* next_ptr) :
+			data (data_item), next (next_ptr) {}
+	};
+
+
+	Node* head;
+
+
+
+public:
+	LinkedList<T>()
+	{
+		head = NULL;
+
+	}
+	~LinkedList()
+	{
+		clear();
+	}
+
+	//=========================================================================================
+
+	void insertHead(T value)
+	{
+		cout << "IN THE HEAD FXN" << endl;
+		Node* cur = head;
+
+		if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+		while (cur != NULL)
+		{
+			if (cur->data == value)
+				return;
+			cur = cur->next;
+		}
+
+		Node* n = new Node (value, head);
+		head = n;
+
+	}
+
+	void insertTail(T value)
+	{
+		cout << "IN THE TAIL FXN" << endl;
+        Node* cur = head;
+
+        if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+
+		while (cur != NULL)
+		{
+			if (cur->data == value)
+				return;
+
+            if (cur->next == NULL)
+            {
+                Node* n = new Node (value, NULL);
+                cur = n;
+                return;
+            }
+
+			cur = cur->next;
+		}
+
+	}
+
+	void insertAfter(T value, T insertionNode)
+	{
+		cout << "IN THE AFTER FXN" << endl;
+        Node* cur = head;
+        Node* inser = head;
+
+        if (cur == NULL)
+        {
+            Node* n = new Node (value, NULL);
+            head = n;
+            return;
+        }
+
+        while (cur->next != NULL)
+		{
+			if (cur->data == value)
+				return;
+			cur = cur->next;
+		}
+
+		if (inser->data == insertionNode)
+        {
+            Node* n = new Node (value, inser->next);
+            inser = n;
+            return;
+        }
+
+		while (inser->next->data != insertionNode)
+        {
+            inser = inser->next;
+        }
+        inser = new Node (value, inser->next);
+
+	}
+
+	void remove(T value)
+	{
+		cout << "IN THE REMOVE FXN" << endl;
+	    Node* cur = head;
+	    Node* del = head;
+	    bool found = false;
+
+	    if (cur == NULL)
+        {
+            return;
+        }
+
+	    cout << "almost there" << endl;
+
+	    while (found == false)
+        {
+
+	    	if (cur->next != NULL)
+			{
+	    		if (cur->next->data != value)
+	    		{
+					cur = cur->next;
+					del = del->next;
+	    		}
+			}
+	    	if (cur->next->data == value)
+	    	//else
+			{
+				found = true;
+				cout << "found me" << endl;
+			}
+        }
+	    del = del->next;
+	    cur = del->next;
+	    cout << "We made it" << endl;
+		delete del;
+
+
+	}
+
+	void clear()
+	{
+		while (head != NULL)
+			remove(head->data);
+	}
+
+	T at(int index)
+	{
+		cout << "IN THE AT FXN" << endl;
+		Node* cur = head;
+
+
+		if (cur == NULL)
+            return NULL;
+		if (index < 0)
+			return NULL;
+
+		cout << "Before for loop" << endl;
+
+        //while (cur->next != NULL)
+		for (int i = 0; i < index; i++)
+        {
+			cur = cur->next;
+			if (cur == NULL)
+			{
+				return NULL;
+			}
+
+        }
+		return cur->data;
+	}
+
+	int size()
+	{
+		cout << "IN THE SIZE FXN" << endl;
+		int number = 0;
+		Node* cur = head;
+
+		if (head == NULL)
+			return 0;
+
+        while (cur != NULL)
+        {
+            cur = cur->next;
+            number++;
+        }
+        //number++;
+
+		return number;
+	}
+
+};
+
+
+
+#endif /* LINKEDLIST_H_ */
